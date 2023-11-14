@@ -118,6 +118,81 @@
         text-overflow: ellipsis;
         color:rgb(50, 50, 50);
     }
+
+    #background-Shadown {
+        width:100vw;
+        height:auto;
+        position:fixed;
+        top:0px;
+        left:0px;
+        bottom:0px;
+        background:rgb(0, 0, 0, 0.25);
+        backdrop-filter: blur(.5rem);
+        -webkit-backdrop-filter: blur(.5rem);
+        opacity:0;
+        z-index: -1;
+    }
+
+    #create-Poem-Container {
+        width:100vw;
+        height:600px;
+        position:fixed;
+        bottom:-600px;
+        left:0px;
+        background:white;
+        border-top-right-radius: 15px;
+        border-top-left-radius: 15px;
+        overflow:hidden;
+    }
+
+    #top-Gradient {
+        width:100%;
+        height:300px;
+        position:absolute;
+        top:0px;
+        left:0px;
+        z-index: -1;
+    }
+
+    #poem-Img-Container {
+        width:150px;
+        height:150px;
+        position:absolute;
+        top:25px;
+        left:50%;
+        transform:translate(-50%);
+        background:rgb(0, 0, 0, 0.1);
+        border-radius: 100%;
+        overflow: hidden;
+    }
+
+    #poem-Img {
+        width:100%;
+        height:100%;
+        object-fit:cover;
+        object-position: center;
+    }
+
+    #poem-Title-Change {
+        width:calc(100% - 100px);
+        height:fit-content;
+        background:rgba(255, 255, 255, .6);
+        padding:15px 10px;
+        font-size: 15px;
+        border-radius: 15px;
+        font-weight: 700;
+        backdrop-filter: blur(1rem);
+        color:rgba(0, 0, 0, 0.5);
+        border: 2px solid rgb(0, 0, 0, 0.2);
+        position:absolute;
+        top:200px;
+        left:50%;
+        transform:translate(-50%);
+    }
+
+    input:focus {
+        outline:none;
+    }
 </style>
 
 <body>
@@ -126,10 +201,10 @@
         <svg id="add-Icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
             <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/>
         </svg>
-        <div style="line-height: 5px;">Create</div>
+        <div style="line-height: 5px;" onclick="showCreateOption()">Create</div>
     </div>
     <div id="writing-Container">
-        <div class="writing-Container">
+        <!-- <div class="writing-Container">
             <div class="writing-Img-Container">
                 <img class="writing-Img">
             </div>
@@ -138,6 +213,15 @@
                 <div class="peom-Title">I cannot find the words.</div>
                 <div class="poem-First-Little-Text">I can never truly find the right words that carry enough weight.</div>
             </div>
+        </div> -->
+    </div>
+    <div id="background-Shadown">    
+        <div id="create-Poem-Container">
+            <div id="top-Gradient"></div>
+            <div id="poem-Img-Container">
+                <img id="poem-Img">
+            </div>
+            <input type="text" id="poem-Title-Change" placeholder="Poem Title" value="I cannot find the words.">
         </div>
     </div>
 </body>
