@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
     <script defer src="script.js"></script>
     <title>Poem Writer</title>
 </head>
@@ -16,7 +16,7 @@
 
     body {
         margin:0px;
-        background: rgb(245, 245, 245);
+        background: white;
     }
 
     @media (min-width:500px) {
@@ -135,30 +135,31 @@
 
     #create-Poem-Container {
         width:100vw;
-        height:600px;
+        height:auto;
         position:fixed;
-        bottom:-600px;
+        bottom:-100vh;
+        top:100vh;
         left:0px;
         background:white;
-        border-top-right-radius: 15px;
-        border-top-left-radius: 15px;
         overflow:hidden;
     }
 
     #top-Gradient {
-        width:100%;
+        width:300px;
         height:300px;
         position:absolute;
         top:0px;
-        left:0px;
+        left:50%;
+        transform:translate(-50%);
         z-index: -1;
+        border-radius: 100%;
     }
 
     #poem-Img-Container {
         width:150px;
         height:150px;
         position:absolute;
-        top:25px;
+        top:75px;
         left:50%;
         transform:translate(-50%);
         background:rgb(0, 0, 0, 0.1);
@@ -171,23 +172,111 @@
         height:100%;
         object-fit:cover;
         object-position: center;
+        opacity:0.7;
+    }
+
+    #camera-Icon {
+        width:65px;
+        height:65px;
+        fill:white;
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%, -50%);
+        opacity:.75;
     }
 
     #poem-Title-Change {
-        width:calc(100% - 100px);
+        width:calc(100% - 110px);
         height:fit-content;
         background:rgba(255, 255, 255, .6);
-        padding:15px 10px;
+        padding: 20px;
         font-size: 15px;
         border-radius: 15px;
         font-weight: 700;
         backdrop-filter: blur(1rem);
         color:rgba(0, 0, 0, 0.5);
-        border: 2px solid rgb(0, 0, 0, 0.2);
+        border:none;
         position:absolute;
-        top:200px;
+        top:375px;
         left:50%;
         transform:translate(-50%);
+        font-style: italic;
+    }
+
+    #close-Poem-Create-Container {
+        width:35px;
+        height:35px;
+        padding:10px;
+        border-radius: 100%;
+        background:rgb(225, 225, 225);
+        position:absolute;
+        top:15px;
+        right:15px;
+    }
+
+    .poemWord {
+        width:fit-content;
+        height:fit-content;
+        position: absolute;
+        color:rgb(245, 245, 245);
+        z-index: -1;
+    }
+
+    #create-Poem {
+        width:calc(100vw - 70px);
+        text-align:center;
+        background:rgb(65, 65, 65);
+        opacity: 0.5;
+        position:absolute;
+        left:50%;
+        bottom:15px;
+        transform:translate(-50%);
+        padding:20px 0px;
+        border-radius: 15px;
+        font-size: 20px;
+        font-weight: 900;
+        color:white;
+    }
+
+    #main-Text {
+        font-size: 15px;
+        font-weight: 900;
+        color:rgb(20, 20, 20);
+        position:absolute;
+        left:50%;
+        transform:translate(-50%);
+        top:250px;
+    }
+
+    #possible-Images {
+        width:calc(100vw - 50px);
+        height:75px;
+        border-radius: 15px;
+        position:absolute;
+        top:285px;
+        left:50%;
+        transform:translate(-50%);
+        display:flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items:center;
+        overflow:hidden;
+    }
+
+    .possible-Img-container {
+        width:65px;
+        height:65px;
+        overflow: hidden;
+        position:relative;
+        border-radius: 15px;
+    }
+
+    .possible-Img {
+        width:100%;
+        height:100%;
+        object-fit: cover;
+        object-position: center;
     }
 
     input:focus {
@@ -195,16 +284,149 @@
     }
 </style>
 
+<!-- Loader Style -->
+<style>
+    .loader-5 {
+        z-index: 5;
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%, -50%);
+        margin: -37.5px;
+        height: 75px;
+        width: 75px;
+        -webkit-animation: loader-5-1 2s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
+                animation: loader-5-1 2s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
+        opacity:0;
+    }
+    @-webkit-keyframes loader-5-1 {
+        0%   { -webkit-transform: rotate(0deg); }
+        100% { -webkit-transform: rotate(360deg); }
+    }
+    @keyframes loader-5-1 {
+        0%   { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    .loader-5::before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0; left: 0;
+        bottom: 0; right: auto;
+        margin: auto;
+        width: 8px;
+        height: 8px;
+        background: #FFF;
+        border-radius: 50%;
+        -webkit-animation: loader-5-2 2s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
+                animation: loader-5-2 2s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
+        opacity: 0.75;
+    }
+    @-webkit-keyframes loader-5-2 {
+        0%   { -webkit-transform: translate3d(0, 0, 0) scale(1); }
+        50%  { -webkit-transform: translate3d(24px, 0, 0) scale(.5); }
+        100% { -webkit-transform: translate3d(0, 0, 0) scale(1); }
+    }
+    @keyframes loader-5-2 {
+        0%   { transform: translate3d(0, 0, 0) scale(1); }
+        50%  { transform: translate3d(24px, 0, 0) scale(.5); }
+        100% { transform: translate3d(0, 0, 0) scale(1); }
+    }
+    .loader-5::after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0; left: auto;
+        bottom: 0; right: 0;
+        margin: auto;
+        width: 8px;
+        height: 8px;
+        background: #FFF;
+        border-radius: 50%;
+        -webkit-animation: loader-5-3 2s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
+                animation: loader-5-3 2s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
+        opacity: 0.75;
+    }
+    @-webkit-keyframes loader-5-3 {
+        0%   { -webkit-transform: translate3d(0, 0, 0) scale(1); }
+        50%  { -webkit-transform: translate3d(-24px, 0, 0) scale(.5); }
+        100% { -webkit-transform: translate3d(0, 0, 0) scale(1); }
+    }
+    @keyframes loader-5-3 {
+        0%   { transform: translate3d(0, 0, 0) scale(1); }
+        50%  { transform: translate3d(-24px, 0, 0) scale(.5); }
+        100% { transform: translate3d(0, 0, 0) scale(1); }
+    }
+    .loader-5 span {
+        display: block;
+        position: absolute;
+        top: 0; left: 0;
+        bottom: 0; right: 0;
+        margin: auto;
+        height: 32px;
+        width: 32px;
+    }
+    .loader-5 span::before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0; left: 0;
+        bottom: auto; right: 0;
+        margin: auto;
+        width: 8px;
+        height: 8px;
+        background: #FFF;
+        border-radius: 50%;
+        -webkit-animation: loader-5-4 2s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
+                animation: loader-5-4 2s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
+        opacity: 0.75;
+    }
+    @-webkit-keyframes loader-5-4 {
+        0%   { -webkit-transform: translate3d(0, 0, 0) scale(1); }
+        50%  { -webkit-transform: translate3d(0, 24px, 0) scale(.5); }
+        100% { -webkit-transform: translate3d(0, 0, 0) scale(1); }
+    }
+    @keyframes loader-5-4 {
+        0%   { transform: translate3d(0, 0, 0) scale(1); }
+        50%  { transform: translate3d(0, 24px, 0) scale(.5); }
+        100% { transform: translate3d(0, 0, 0) scale(1); }
+    }
+    .loader-5 span::after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: auto; left: 0;
+        bottom: 0; right: 0;
+        margin: auto;
+        width: 8px;
+        height: 8px;
+        background: #FFF;
+        border-radius: 50%;
+        -webkit-animation: loader-5-5 2s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
+                animation: loader-5-5 2s cubic-bezier(0.770, 0.000, 0.175, 1.000) infinite;
+        opacity: 0.75;
+    }
+    @-webkit-keyframes loader-5-5 {
+        0%   { -webkit-transform: translate3d(0, 0, 0) scale(1); }
+        50%  { -webkit-transform: translate3d(0, -24px, 0) scale(.5); }
+        100% { -webkit-transform: translate3d(0, 0, 0) scale(1); }
+    }
+    @keyframes loader-5-5 {
+        0%   { transform: translate3d(0, 0, 0) scale(1); }
+        50%  { transform: translate3d(0, -24px, 0) scale(.5); }
+        100% { transform: translate3d(0, 0, 0) scale(1); }
+    }
+</style>
 <body>
-    <div id="top-Title">Something</div>
-    <div id="create-New-Poem">
+    <div id="top-Title">My Poems</div>
+    <div id="create-New-Poem" onclick="showCreateOption()">
         <svg id="add-Icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
             <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/>
         </svg>
-        <div style="line-height: 5px;" onclick="showCreateOption()">Create</div>
+        <div style="line-height: 5px;">Create</div>
     </div>
     <div id="writing-Container">
-        <!-- <div class="writing-Container">
+        <div class="writing-Container">
             <div class="writing-Img-Container">
                 <img class="writing-Img">
             </div>
@@ -213,15 +435,40 @@
                 <div class="peom-Title">I cannot find the words.</div>
                 <div class="poem-First-Little-Text">I can never truly find the right words that carry enough weight.</div>
             </div>
-        </div> -->
+        </div>
     </div>
     <div id="background-Shadown">    
         <div id="create-Poem-Container">
             <div id="top-Gradient"></div>
-            <div id="poem-Img-Container">
+            <div id="poem-Img-Container" onclick="changeImage()">
                 <img id="poem-Img">
+                <svg id="camera-Icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                    <path d="M440-440ZM120-120q-33 0-56.5-23.5T40-200v-480q0-33 23.5-56.5T120-760h126l74-80h240v80H355l-73 80H120v480h640v-360h80v360q0 33-23.5 56.5T760-120H120Zm640-560v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80ZM440-260q75 0 127.5-52.5T620-440q0-75-52.5-127.5T440-620q-75 0-127.5 52.5T260-440q0 75 52.5 127.5T440-260Zm0-80q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29Z"/>
+                </svg>
+                <div class="loader-5 center"><span></span></div>
             </div>
+
+            <div id="main-Text">Select An Image</div>
+
+            <div id="possible-Images">
+                <div class="possible-Img-container">
+                    <img class="possible-Img" src="https://images.pexels.com/photos/887353/pexels-photo-887353.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" id="p-Image-One">
+                </div>
+                
+                <div class="possible-Img-container">
+                    <img class="possible-Img" src="https://images.pexels.com/photos/5662855/pexels-photo-5662855.png?auto=compress&cs=tinysrgb&h=650&w=940" id="p-Image-Two">
+                </div>
+                
+                <div class="possible-Img-container">
+                    <img class="possible-Img" src="https://images.pexels.com/photos/5941394/pexels-photo-5941394.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" id="p-Image-Three">
+                </div>
+            </div>
+
+            <svg id="close-Poem-Create-Container" onclick="closeCreateOption()" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+            </svg>
             <input type="text" id="poem-Title-Change" placeholder="Poem Title" value="I cannot find the words.">
+            <div id="create-Poem">Start Writing...</div>
         </div>
     </div>
 </body>
