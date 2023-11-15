@@ -108,12 +108,14 @@ getAverageColor(imageUrl, function (avgColor) {
 
 
 const apiKey = 'pTFdtB7nkvUbpcUtForgIX9NaX7YNgFYFM2QZ2eHbkmLox4u1P6mF5Zk';
-var searchQuery = 'Love'; // Replace with your search query
+var searchQuery = 'Poem Background Images'; // Replace with your search query
 
-var imageIndex = 1
+const style = document.createElement('style');
+
+var imageIndex = 10
 
 function changeImage() {
-    searchQuery = document.getElementById("poem-Title-Change").value
+    // searchQuery = document.getElementById("poem-Title-Change").value
     
     document.getElementById("camera-Icon").style.transition = ".5s"
     document.getElementById("camera-Icon").style.opacity = "0"
@@ -121,76 +123,79 @@ function changeImage() {
     setTimeout(function() {
         document.querySelector(".loader-5").style.transition = ".5s"
         document.querySelector(".loader-5").style.opacity = "1"
-    }, 500)
+        setTimeout(function() {
+            document.getElementById("poem-Img").style.transition = ".5s"
+            document.getElementById("poem-Img").style.opacity = "0"
 
-    imageIndex+= 1
-    var apiUrl = `https://api.pexels.com/v1/search?query=${searchQuery}&per_page=1&page=` + imageIndex;
+           setTimeout(function() {
+                imageIndex += 1
+                var apiUrl = `https://api.pexels.com/v1/search?query=${searchQuery}&per_page=1&page=` + imageIndex;
 
-    fetch(apiUrl, {
-        headers: {
-            Authorization: apiKey,
-        },
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Extract the URL of the random photo
-        const photoUrl = data.photos[0].src.large;
+                fetch(String(apiUrl), {
+                    headers: {
+                        Authorization: apiKey,
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Extract the URL of the random photo
+                    const photoUrl = data.photos[0].src.large;
 
-        // Display the photo or do something else with it
-        console.log('Random Photo URL:', photoUrl);
-        document.getElementById("poem-Img").setAttribute("src", photoUrl)
-        getAverageColor(photoUrl, function (avgColor) {
-            if(!isBrighter(avgColor)) {
-                document.getElementById("poem-Title-Change").style.transition = ".5s"
-                document.getElementById("poem-Title-Change").style.color = "white"
-                const style = document.createElement('style');
-                style.innerHTML = `#poem-Title-Change::placeholder {
-                    color: #rgb(255, 255, 255, 0.75);
-                    font-style: italic;
-                }`;
-
-                // Append the style rule to the document head
-                document.head.appendChild(style);
-                document.getElementById("poem-Title-Change").style.border = "2px solid rgb(255, 255, 255, 0.25)"
-            } else {
-                document.getElementById("poem-Title-Change").style.transition = ".5s"
-                document.getElementById("poem-Title-Change").style.color = "black"
+                    document.getElementById("poem-Img").setAttribute("src", photoUrl)
+                    getAverageColor(photoUrl, function (avgColor) {
+                        if(!isBrighter(avgColor)) {
+                            document.getElementById("poem-Title-Change").style.transition = ".5s"
+                            document.getElementById("poem-Title-Change").style.color = "white"
+                            
+                            style.innerHTML = `#poem-Title-Change::placeholder {
+                                color: rgb(255, 255, 255, 0.75);
+                                font-style: italic;
+                            }`;
                 
-                document.getElementById("poem-Title-Change").style.transition = ".5s"
-                document.getElementById("poem-Title-Change").style.color = "white"
-                const style = document.createElement('style');
-                style.innerHTML = `#poem-Title-Change::placeholder {
-                    color: #rgb(255, 255, 255, 0.75);
-                    font-style: italic;
-                }`;
-
-                document.getElementById("poem-Title-Change").style.border = "2px solid rgb(0, 0, 0, 0.2)"
-            }
-            document.getElementById("poem-Img-Container").style.border = "7px solid " + "rgb(" + avgColor.r + "," + avgColor.g + "," + avgColor.b + ")"
-            document.getElementById("poem-Title-Change").style.background = "rgb(" + avgColor.r + "," + avgColor.g + "," + avgColor.b + ")"
-            // document.getElementById("top-Gradient").style.background = "radial-gradient(rgb(" + avgColor.r + "," + avgColor.g + "," + avgColor.b + ") 10%, rgb(" + avgColor.r + "," + avgColor.g + "," + avgColor.b + ", 0.5) 15%, white 100%)"
-        });
-
-        // getAverageColor(photoUrl, function (avgColor) {
-        //     var brighter = isBrighter(avgColor);
-        //     if (brighter) {
-        //         document.querySelector(".peom-Title").style.color = "rgb(20, 20, 20)"
-        //         document.querySelector(".poem-First-Little-Text").style.color = "rgb(50, 50, 50)"
-        //         console.log("brighter")
-        //     } else {
-        //         document.querySelector(".peom-Title").style.color = "rgb(250, 250, 250)"
-        //         document.querySelector(".poem-First-Little-Text").style.color = "rgb(220, 220, 220)"
-        //         console.log("darker")
-        //     }
-        // });
-        
-    })
-    .catch(error => {
-        console.error('Error fetching data from Pexels API:', error);
-    });
+                            // Append the style rule to the document head
+                            document.head.appendChild(style);
+                            document.getElementById("poem-Title-Change").style.border = "2px solid rgb(255, 255, 255, 0.25)"
+                        } else {
+                            document.getElementById("poem-Title-Change").style.transition = ".5s"
+                            document.getElementById("poem-Title-Change").style.color = "rgb(25, 25, 25)"
+                
+                            style.innerHTML = `#poem-Title-Change::placeholder {
+                                color: rgb(20, 20, 20, 0.75);
+                                font-style: italic;
+                            }`;
+                
+                            document.head.appendChild(style);
+                            document.getElementById("poem-Title-Change").style.border = "2px solid rgb(0, 0, 0, 0.2)"
+                        }
+                        document.getElementById("poem-Img-Container").style.border = "7px solid " + "rgb(" + avgColor.r + "," + avgColor.g + "," + avgColor.b + ")"
+                        document.getElementById("poem-Img-Container").style.transition = ".5s"
+                        document.getElementById("poem-Img-Container").style.background = "rgb(" + avgColor.r + "," + avgColor.g + "," + avgColor.b + ")"
+                        document.querySelector(".loader-5").style.transition = ".5s"
+                        document.querySelector(".loader-5").style.opacity = "0"
+                        setTimeout(function() {
+                            document.getElementById("camera-Icon").style.transition = ".5s"
+                            document.getElementById("camera-Icon").style.opacity = "0.5"
+                            document.getElementById("poem-Img-Container").style.transition = "0s"
+                            document.getElementById("poem-Img").style.transition = ".5s"
+                            document.getElementById("poem-Img").style.opacity = "0.7"
+                            setTimeout(function() {
+                                document.getElementById("poem-Img").style.transition = "0s"
+                            }, 500)
+                        }, 500);
+                        document.getElementById("poem-Title-Change").style.background = "rgb(" + avgColor.r + "," + avgColor.g + "," + avgColor.b + ")"
+                        // document.getElementById("top-Gradient").style.background = "radial-gradient(rgb(" + avgColor.r + "," + avgColor.g + "," + avgColor.b + ") 10%, rgb(" + avgColor.r + "," + avgColor.g + "," + avgColor.b + ", 0.5) 15%, white 100%)"
+                    });
+                    
+                })
+                .catch(error => {
+                    // console.error('Error fetching data from Pexels API:', error);
+                });
+           }, 500)
+        }, 1000)
+    }, 500)
 }
 
-changeImage()
+// changeImage()
 
 const poemWords = [
     "Serene", "Whisper", "Enchant", "Meadow", "Melody",
@@ -204,6 +209,118 @@ const poemWords = [
     "Velvet", "Ethereal", "Silken", "Gossamer", "Glisten",
     "Enigma", "Nebula", "Quixotic", "Soothe", "Enrapture"
 ];
+
+const emotions = [
+    "Joy",
+    "Serenity",
+    "Gratitude",
+    "Contentment",
+    "Amazement",
+    "Compassion",
+    "Elation",
+    "Sympathy",
+    "Jubilation",
+    "Tenderness",
+    "Bliss",
+    "Adoration",
+    "Empathy",
+    "Wonder",
+    "Delight",
+    "Affection",
+    "Ecstasy",
+    "Inspiration",
+    "Satisfaction",
+    "Radiance",
+    "Tranquility",
+    "Awe",
+    "Fondness",
+    "Amusement",
+    "Reverence",
+    "Calm",
+    "Glee",
+    "Zeal",
+    "Warmth",
+    "Rapture",
+    "Gaiety",
+    "Hope",
+    "Astonishment",
+    "Love",
+    "Jubilance",
+    "Pity",
+    "Felicity",
+    "Nostalgia",
+    "Euphoria",
+    "Excitement",
+    "Altruism",
+    "Comfort",
+    "Jubilee",
+    "Melancholy",
+    "Regret",
+    "Yearning",
+    "Solace",
+    "Inspiration",
+    "Sorrow",
+    "Optimism"
+];
+  
+
+for(var i=0;i<poemWords.length;i++) {
+    if(i == 0) {
+        document.getElementById("search-Prompts").innerHTML += "<div class='word selected'>" + poemWords[i] + "</div>"
+    } else {
+        document.getElementById("search-Prompts").innerHTML += "<div class='word'>" + poemWords[i] + "</div>"
+    }
+}
+
+// var apiUrl = `https://api.pexels.com/v1/search?query=${searchQuery}&per_page=1&page=` + imageIndex;
+
+// fetch(String(apiUrl), {
+//     headers: {
+//         Authorization: apiKey,
+//     },
+// })
+// .then(response => response.json())
+// .then(data => {
+//     // Extract the URL of the random photo
+//     const photoUrl = data.photos[0].src.large;
+
+//     // Display the photo or do something else with it
+//     // console.log('Random Photo URL:', photoUrl);
+//     document.getElementById("poem-Img").setAttribute("src", photoUrl)
+//     getAverageColor(photoUrl, function (avgColor) {
+//         if(!isBrighter(avgColor)) {
+//             document.getElementById("poem-Title-Change").style.transition = ".5s"
+//             document.getElementById("poem-Title-Change").style.color = "white"
+//             const style = document.createElement('style');
+//             style.innerHTML = `#poem-Title-Change::placeholder {
+//                 color: #rgb(255, 255, 255, 0.75);
+//                 font-style: italic;
+//             }`;
+
+//             // Append the style rule to the document head
+//             document.head.appendChild(style);
+//             document.getElementById("poem-Title-Change").style.border = "2px solid rgb(255, 255, 255, 0.25)"
+//         } else {
+//             console.log("darker")
+//             document.getElementById("poem-Title-Change").style.transition = ".5s"
+//             document.getElementById("poem-Title-Change").style.color = "black"
+
+//             const style = document.createElement('style');
+//             style.innerHTML = `#poem-Title-Change::placeholder {
+//                 color: #rgb(0, 0, 0, 0.75);
+//                 font-style: italic;
+//             }`;
+
+//             document.getElementById("poem-Title-Change").style.border = "2px solid rgb(0, 0, 0, 0.2)"
+//         }
+//         document.getElementById("poem-Img-Container").style.border = "7px solid " + "rgb(" + avgColor.r + "," + avgColor.g + "," + avgColor.b + ")"
+//         document.getElementById("poem-Title-Change").style.background = "rgb(" + avgColor.r + "," + avgColor.g + "," + avgColor.b + ")"
+//         // document.getElementById("top-Gradient").style.background = "radial-gradient(rgb(" + avgColor.r + "," + avgColor.g + "," + avgColor.b + ") 10%, rgb(" + avgColor.r + "," + avgColor.g + "," + avgColor.b + ", 0.5) 15%, white 100%)"
+//     });
+// })
+// .catch(error => {
+//     console.error('Error fetching data from Pexels API:', error);
+// });
 
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
