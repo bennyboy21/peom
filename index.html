@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-storage.js"></script>
     <script defer src="script.js"></script>
     <title>Poem Writer</title>
 </head>
@@ -15,12 +19,15 @@
     }
 
     :root {
-        --current-Color:black;
+        --otherCurrent-Color:rgb(245, 245, 245);
+        --current-Color:rgb(25, 25, 25);
+        --actualCurrent-Color:rgb(25, 25, 25);
     }
 
     body {
+        height:500vh;
         margin:0px;
-        background: white;
+        background:rgb(20, 20, 20);
     }
 
     @media (min-width:500px) {
@@ -34,14 +41,14 @@
         font-weight: 900;
         margin-top: 25px;
         margin-left: 25px;
-        color:rgb(20, 20, 20);
+        color:rgb(245, 245, 245);
     }
     
     #create-New-Poem {
         width:calc(100vw - 70px);
         margin-left: auto;
         margin-right: auto;
-        background:rgb(230, 230, 230);
+        background:rgb(50, 50, 50, 0.2);
         border-radius: 15px;
         padding:30px 10px;
         display:flex;
@@ -50,13 +57,14 @@
         margin-top: 15px;
         font-size: 20px;
         font-weight: 700;
-        color:rgb(20, 20, 20);
+        color:rgb(245, 245, 245);
+        box-shadow: 0px 4px 15px 2px rgba(0, 0, 0, .25);
     }
 
     #add-Icon {
         width:30px;
         height:30px;
-        fill: rgb(20, 20, 20);
+        fill:rgb(245, 245, 245);
     }
 
     #writing-Container {
@@ -64,16 +72,16 @@
         overflow:hidden;
         margin-left: auto;
         margin-right: auto;
-        margin-top: 5px;
+        margin-top: 10px;
     }
 
     .writing-Container {
         width:100%;
         height:80px;
         border-radius: 15px;
-        /* background:linear-gradient(to right, rgb(64, 68, 53) 5%, rgb(230, 230, 230) 95%); */
         overflow:hidden;
         position:relative;
+        background:white;
     }
 
     .writing-Img-Container {
@@ -130,7 +138,7 @@
         top:0px;
         left:0px;
         bottom:0px;
-        background:rgb(0, 0, 0, 0.25);
+        background:rgb(0, 0, 0, 0.75);
         backdrop-filter: blur(.5rem);
         -webkit-backdrop-filter: blur(.5rem);
         opacity:0;
@@ -144,8 +152,9 @@
         bottom:-100vh;
         top:100vh;
         left:0px;
-        background:white;
+        background:var(--actualCurrent-Color);
         overflow:hidden;
+        transition: .5s;
     }
 
     #top-Gradient {
@@ -163,9 +172,8 @@
         width:150px;
         height:150px;
         position:absolute;
-        top:68px;
-        left:50%;
-        transform:translate(-50%);
+        top:15px;
+        left:15px;
         background:rgb(0, 0, 0, 0.1);
         border-radius: 100%;
         overflow: hidden;
@@ -194,18 +202,19 @@
     }
 
     #poem-Title-Change {
-        width:calc(100% - 110px);
+        width:calc(100% - 80px);
         height:fit-content;
-        background:rgba(255, 255, 255, .6);
+        /* background:rgba(255, 255, 255, .6); */
+        background:rgb(0, 0, 0, 0.1);
         padding: 20px;
         font-size: 15px;
         border-radius: 15px;
         font-weight: 700;
         backdrop-filter: blur(1rem);
-        color:rgba(0, 0, 0, 0.5);
-        border:none;
+        color:rgb(255, 255, 255);
+        border:2px solid transparent;
         position:absolute;
-        top:450px;
+        top:190px;
         left:50%;
         transform:translate(-50%);
         font-style: italic;
@@ -216,8 +225,9 @@
         height:35px;
         padding:10px;
         border-radius: 100%;
-        background:rgb(225, 225, 225);
+        background:rgba(0, 0, 0, .1);
         position:absolute;
+        fill:var(--otherCurrent-Color);
         top:15px;
         right:15px;
     }
@@ -226,18 +236,20 @@
         width:fit-content;
         height:fit-content;
         position: absolute;
-        color:rgb(245, 245, 245);
+        color:var(--otherCurrent-Color);
         z-index: -1;
+        opacity: 0.05;
+        transition: .5s;
     }
 
     #create-Poem {
-        width:calc(100vw - 70px);
+        width:calc(100vw - 40px);
         text-align:center;
         background:rgb(65, 65, 65);
         opacity: 0.5;
         position:absolute;
         left:50%;
-        bottom:15px;
+        bottom:50px;
         transform:translate(-50%);
         padding:20px 0px;
         border-radius: 15px;
@@ -246,22 +258,37 @@
         color:white;
     }
 
+    #middle-Container {
+        width:calc(100vw - 40px);
+        height:175px;
+        position:absolute;
+        top:275px;
+        left:50%;
+        transform:translate(-50%);
+        overflow:hidden;
+        /* background:var(--actualCurrent-Color); */
+        background:rgba(0, 0, 0, .1);
+        border-radius: 15px;
+        border:2px solid transparent;
+        transition: .5s;
+    }
+
     #main-Text {
         font-size: 15px;
         font-weight: 900;
-        color:rgb(20, 20, 20);
+        color:var(--otherCurrent-Color);
         position:absolute;
+        top:10px;
         left:50%;
         transform:translate(-50%);
-        top:250px;
     }
 
     #possible-Images {
-        width:calc(100vw - 50px);
+        width:calc(100% - 50px);
         height:75px;
         border-radius: 15px;
         position:absolute;
-        top:285px;
+        top:35px;
         left:50%;
         transform:translate(-50%);
         display:flex;
@@ -284,6 +311,38 @@
         height:100%;
         object-fit: cover;
         object-position: center;
+    }
+
+    #search-Prompts {
+        width:calc(100% - 50px);
+        padding:25px;
+        display:flex;
+        flex-direction:row;
+        overflow-x: scroll;
+        gap:5px;
+        position:absolute;
+        top:100px;
+    }
+
+    .word {
+        width:fit-content;
+        padding:7px 15px;
+        background:var(--current-Color);
+        border-radius: 25px;
+        font-weight: 900;
+        font-size: 15px;
+        color:var(--otherCurrent-Color);
+        transition: .5s;    
+    }
+
+    #imageInput {
+        width:100%;
+        height:100%;
+        position:absolute;
+        opacity:0;
+        top:0px;
+        left:0px;
+        z-index: 10;
     }
 
     input:focus {
@@ -447,30 +506,15 @@
     <div id="background-Shadown">    
         <div id="create-Poem-Container">
             <div id="top-Gradient"></div>
-            <div id="poem-Img-Container" onclick="changeImage()">
+            <div id="poem-Img-Container">
+                <!-- onclick="changeImage()" -->
                 <img id="poem-Img">
                 <svg id="camera-Icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                     <path d="M440-440ZM120-120q-33 0-56.5-23.5T40-200v-480q0-33 23.5-56.5T120-760h126l74-80h240v80H355l-73 80H120v480h640v-360h80v360q0 33-23.5 56.5T760-120H120Zm640-560v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80ZM440-260q75 0 127.5-52.5T620-440q0-75-52.5-127.5T440-620q-75 0-127.5 52.5T260-440q0 75 52.5 127.5T440-260Zm0-80q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29Z"/>
                 </svg>
                 <div class="loader-5 center"><span></span></div>
+                <input type="file" id="imageInput" accept="image/*" onchange="checkImage()">
             </div>
-
-            <div id="main-Text">Select An Image</div>
-
-            <div id="possible-Images">
-                <div class="possible-Img-container">
-                    <img class="possible-Img" src="https://images.pexels.com/photos/887353/pexels-photo-887353.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" id="p-Image-One">
-                </div>
-                
-                <div class="possible-Img-container">
-                    <img class="possible-Img" src="https://images.pexels.com/photos/5662855/pexels-photo-5662855.png?auto=compress&cs=tinysrgb&h=650&w=940" id="p-Image-Two">
-                </div>
-                
-                <div class="possible-Img-container">
-                    <img class="possible-Img" src="https://images.pexels.com/photos/5941394/pexels-photo-5941394.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" id="p-Image-Three">
-                </div>
-            </div>
-            <div id="search-Prompts"></div>
 
             <svg id="close-Poem-Create-Container" onclick="closeCreateOption()" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                 <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
