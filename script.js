@@ -10,53 +10,6 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-var img = new Image();
-
-function getAverageColor(imageUrl, callback) {
-    img.onload = function () {
-        var canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-    
-        var ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, img.width, img.height);
-    
-        var imageData = ctx.getImageData(0, 0, img.width, img.height);
-        var data = imageData.data;
-    
-        var totalR = 0, totalG = 0, totalB = 0;
-    
-        for (var i = 0; i < data.length; i += 4) {
-            totalR += data[i];
-            totalG += data[i + 1];
-            totalB += data[i + 2];
-        }
-    
-        var pixelCount = data.length / 4;
-    
-        var avgR = Math.round(totalR / pixelCount);
-        var avgG = Math.round(totalG / pixelCount);
-        var avgB = Math.round(totalB / pixelCount);
-    
-        var avgColor = {
-            r: avgR,
-            g: avgG,
-            b: avgB
-        };
-    
-        callback(avgColor);
-    };
-}
-
-function isBrighter(avgColor) {
-    // Calculate luminance using the formula: Y = 0.299 * R + 0.587 * G + 0.114 * B
-    var luminance = 0.299 * avgColor.r + 0.587 * avgColor.g + 0.114 * avgColor.b;
-  
-    // You can adjust the threshold value based on your preference
-    var threshold = 128;
-  
-    return luminance > threshold;
-}
 
 function showCreateOption() {
     document.getElementById("create-Poem-Container").style.transition = ".5s"
@@ -88,93 +41,6 @@ function closeCreateOption() {
         }, 200)
     })
 }
-
-// showCreateOption()
-  
-// Example usage:
-function getAverageColorFromFirebaseStorage(imagePath, callback) {
-    // Get a reference to the storage service
-    var storage = firebase.storage();
-
-    // Create a storage reference from our storage service
-    var storageRef = storage.ref();
-
-    // Create a reference to the image
-    var imageRef = storageRef.child(imagePath);
-
-    // Get the download URL of the image
-    imageRef.getDownloadURL().then(function (imageUrl) {
-        var img = new Image();
-        img.crossOrigin = "anonymous";
-        img.src = imageUrl;
-
-        img.onload = function () {
-            getAverageColor(img.src, function (avgColor) {
-                callback(avgColor);
-            });
-        };
-    }).catch(function (error) {
-        console.error('Error getting download URL:', error);
-    });
-}
-
-// Example usage:
-var imagePath = 'images/bjcwvjspvhtvoiuuidgv'; // replace with your image path
-getAverageColorFromFirebaseStorage(imagePath, function (avgColor) {
-    console.log('Average Color:', avgColor);
-    var brighter = isBrighter(avgColor);
-    if (brighter) {
-        document.querySelector(".peom-Title").style.color = "rgb(20, 20, 20)"
-        document.querySelector(".poem-First-Little-Text").style.color = "rgb(40, 40, 40)"
-        console.log("brighter")
-    } else {
-        document.querySelector(".peom-Title").style.color = "rgb(250, 250, 250)"
-        document.querySelector(".poem-First-Little-Text").style.color = "rgb(220, 220, 220)"
-        console.log("darker")
-    }
-
-    console.log('Average Color:', avgColor);
-    
-    document.querySelector(".writing-Container").style.background = "linear-gradient(to right, rgb(" + avgColor.r + "," + avgColor.g + "," + avgColor.b + ") 65%, rgb(20, 20, 20) 100%)"
-});
-
-// var imageUrl = 'https://firebasestorage.googleapis.com/v0/b/superchat-d6246.appspot.com/o/images%2Fbjcwvjspvhtvoiuuidgv?alt=media&token=d7c7940d-0f20-4288-91c9-488898131e46';
-
-// var img = new Image();
-// img.crossOrigin = "anonymous"; // Use lowercase "anonymous"
-// img.src = imageUrl;
-
-// document.querySelector(".writing-Img").setAttribute("src", imageUrl);
-
-// img.onload = function() {
-//     getAverageColor(img.src, function (avgColor) {
-//         var brighter = isBrighter(avgColor);
-//         if (brighter) {
-//             document.querySelector(".peom-Title").style.color = "rgb(20, 20, 20)"
-//             document.querySelector(".poem-First-Little-Text").style.color = "rgb(40, 40, 40)"
-//             console.log("brighter")
-//         } else {
-//             document.querySelector(".peom-Title").style.color = "rgb(250, 250, 250)"
-//             document.querySelector(".poem-First-Little-Text").style.color = "rgb(220, 220, 220)"
-//             console.log("darker")
-//         }
-
-//         console.log('Average Color:', avgColor);
-        
-//         document.querySelector(".writing-Container").style.background = "linear-gradient(to right, rgb(" + avgColor.r + "," + avgColor.g + "," + avgColor.b + ") 65%, rgb(20, 20, 20) 100%)"
-//     });
-// };
-
-// // You can also add this line to set the mode to 'cors' for the fetch request
-// fetch(imageUrl, { mode: 'cors' })
-// .then(response => response.blob())
-// .then(blob => {
-//     // Handle the blob data if needed
-//     console.log(blob)
-// })
-// .catch(error => console.error('Error fetching image:', error));
-
-// poem-First-Little-Text
 
 
 const apiKey = 'pTFdtB7nkvUbpcUtForgIX9NaX7YNgFYFM2QZ2eHbkmLox4u1P6mF5Zk';
@@ -320,17 +186,30 @@ function uploadImage() {
 
         // Upload the file
         imageRef.put(file).then(function(snapshot) {
-            console.log('Image uploaded successfully!');
             
             // You can get the download URL of the uploaded image
             snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                console.log('File available at', downloadURL);
                 document.getElementById("poem-Img").setAttribute("src", downloadURL)
 
-                setTimeout(function() {
-                    document.getElementById("poem-Img").style.transition = ".5s"
-                    document.getElementById("poem-Img").style.opacity = "0.7"
-                }, 500)
+                var img = new Image()
+
+                img.src = downloadURL
+
+                img.onload = function() {
+                    setTimeout(function() {
+                        document.getElementById("poem-Img").style.transition = ".5s"
+                        document.getElementById("poem-Img").style.opacity = "0.7"
+
+                        var imgSRC = document.getElementById("poem-Img").src
+                        var title = document.getElementById("poem-Title-Change").value
+                    
+                        if(title != "" && imgSRC != "") {
+                            document.getElementById("create-Poem").style.opacity = "1"
+                        } else {
+                            document.getElementById("create-Poem").style.opacity = "0.5"
+                        }
+                    }, 1500)
+                }
             });
         }).catch(function(error) {
             console.error('Error uploading image:', error);
@@ -338,4 +217,145 @@ function uploadImage() {
     } else {
         alert('Please select an image first.');
     }
+}
+
+function categorizeDates(dateArray) {
+    const currentDate = new Date();  // Current date and time
+
+    const result = dateArray.map((dateString) => {
+        const date = new Date(dateString);
+        const timeDifference = currentDate.getTime() - date.getTime();
+        const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+        if (daysDifference === 0) {
+            return "Current day";
+        } else if (daysDifference === 1) {
+            return "Previous day";
+        } else if (daysDifference <= 7) {
+            return "Last 7 days";
+        } else if (daysDifference <= 30) {
+            return "Last 30 days";
+        } else {
+            return "Over a month ago";
+        }
+    });
+
+    return result;
+}
+
+// Example usage:
+const dateArray = ["2023-11-01T12:00:00", "2023-11-05T08:00:00", "2023-11-15T18:30:00"];
+const result = categorizeDates(dateArray);
+console.log(result);
+
+function checkCompletion() {
+    var imgSRC = document.getElementById("poem-Img").src
+    var title = document.getElementById("poem-Title-Change").value
+
+    if(title != "" && imgSRC != "") {
+        document.getElementById("create-Poem").style.opacity = "1"
+    } else {
+        document.getElementById("create-Poem").style.opacity = "0.5"
+    }
+}
+
+function createPoem() {
+    var imgSRC = document.getElementById("poem-Img").src
+    var title = document.getElementById("poem-Title-Change").value
+
+    if(title != "" && imgSRC != "") {
+        sec = new Date().getSeconds()
+        min = new Date().getMinutes()
+        hour = new Date().getHours()
+        day = new Date().getDate()
+        month = new Date().getMonth()
+        year = new Date().getFullYear()
+
+        if(sec < 10) {
+            sec = 0 + String(sec)
+        }
+
+        if(min < 10) {
+            min = 0 + String(min)
+        }
+
+        if(hour < 10) {
+            hour = 0 + String(hour)
+        }
+
+        if(day < 10) {
+            day = 0 + String(day)
+        }
+
+        if(month < 10) {
+            month = 0 + String(month)
+        }
+
+        dateInfo = String(year) + String(month) + String(day) + String(hour) + String(min) + String(sec)
+        firebase.database().ref("Poems/" + dateInfo).set({
+            "last_Updated":String(new Date()),
+            "poem_Text": "",
+            "poem_Title": title,
+            "poem_Img": imgSRC
+        })
+    } else if(title != "" && imgSRC == "") {
+        alert("Add Poem Cover Image")
+    } else if(title == "" && imgSRC != "") {
+        alert("Add Title To Poem")
+    } else {
+        alert("Add Title & Poem Cover Image")
+    }
+}
+
+function formatTimeAgo(lastEditedDate, currentDate) {
+    const timeDifference = currentDate.getTime() - lastEditedDate.getTime();
+    const seconds = Math.floor(timeDifference / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const weeks = Math.floor(days / 7);
+    const months = Math.floor(days / 30);
+    const years = Math.floor(days / 365);
+
+    if (seconds < 60) {
+        return `${seconds}s ago`;
+    } else if (minutes < 60) {
+        return `${minutes}m ago`;
+    } else if (hours < 24) {
+        return `${hours}h ago`;
+    } else if (days < 7) {
+        return `${days}d ago`;
+    } else if (weeks < 4) {
+        return `${weeks}w ago`;
+    } else if (months < 12) {
+        return `${months}mo ago`;
+    } else {
+        return `${years}y ago`;
+    }
+}
+
+var index = 0
+
+firebase.database().ref("Poems/").once("value", function(snapshot) {
+    snapshot.forEach(function(child) {
+        console.log(child.val())
+        const lastEditedDate = new Date(child.val().last_Updated);
+        const currentDate = new Date();
+        const formattedTimeAgo = formatTimeAgo(lastEditedDate, currentDate);
+        console.log(formattedTimeAgo);
+        var element = document.createElement("div")
+
+        element.classList.add("writing-Container")
+
+        element.setAttribute("onclick", "openPoem(" + index + ")")
+
+        element.innerHTML = '<div id="img-Glow"></div><div class="text-Container"><div class="peom-Title">' + child.val().poem_Title + '</div><div class="poem-First-Little-Text">' + child.val().poem_Text + '</div></div><div class="date">' + formattedTimeAgo + '</div>'
+        document.getElementById("writing-Container").prepend(element)
+        index += 1
+    })
+})
+
+function openPoem(currentIndex) {
+    currentIndex = (index - currentIndex) - 1
+    console.log(currentIndex)
 }

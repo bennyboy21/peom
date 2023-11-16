@@ -72,7 +72,6 @@
         overflow:hidden;
         margin-left: auto;
         margin-right: auto;
-        margin-top: 10px;
     }
 
     .writing-Container {
@@ -81,7 +80,8 @@
         border-radius: 15px;
         overflow:hidden;
         position:relative;
-        background:white;
+        background:rgb(50, 50, 50, 0.2);
+        margin-top: 10px;
     }
 
     .writing-Img-Container {
@@ -101,10 +101,31 @@
         object-position: center;
     }
 
-    .text-Container {
-        width:calc(100% - 95px);
+    .time-Sections {
+        font-size: 25px;
+        font-weight: 900;
+        color:white;
+        padding:15px 5px;
+    }
+
+    .date {
+        width:fit-content;
+        padding:5px 10px;
         position:absolute;
-        left:75px;
+        top:50%;
+        right:15px;
+        transform:translate(0, -50%);
+        background:rgb(255, 255, 255, 0.1);
+        border: none;
+        border-radius: 15px;
+        color:white;
+        font-weight: 900;
+    }
+
+    .text-Container {
+        width:calc(100% - 130px);
+        position:absolute;
+        left:15px;
         top:50%;
         transform:translate(0, -50%);
     }
@@ -118,7 +139,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         font-style: italic;
-        color:rgb(20, 20, 20);
+        color:rgb(245, 245, 245);
     }
 
     .poem-First-Little-Text {
@@ -128,7 +149,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        color:rgb(50, 50, 50);
+        color:rgb(150, 150, 150);
     }
 
     #background-Shadown {
@@ -155,6 +176,7 @@
         background:var(--actualCurrent-Color);
         overflow:hidden;
         transition: .5s;
+        z-index: 100;
     }
 
     #top-Gradient {
@@ -172,8 +194,9 @@
         width:150px;
         height:150px;
         position:absolute;
-        top:15px;
-        left:15px;
+        top:50px;
+        left:50%;
+        transform:translate(-50%);
         background:rgb(0, 0, 0, 0.1);
         border-radius: 100%;
         overflow: hidden;
@@ -214,7 +237,7 @@
         color:rgb(255, 255, 255);
         border:2px solid transparent;
         position:absolute;
-        top:190px;
+        top:250px;
         left:50%;
         transform:translate(-50%);
         font-style: italic;
@@ -245,7 +268,7 @@
     #create-Poem {
         width:calc(100vw - 40px);
         text-align:center;
-        background:rgb(65, 65, 65);
+        background:rgb(14, 14, 14);
         opacity: 0.5;
         position:absolute;
         left:50%;
@@ -256,6 +279,7 @@
         font-size: 20px;
         font-weight: 900;
         color:white;
+        transition: .5s;
     }
 
     #middle-Container {
@@ -492,36 +516,35 @@
         <div style="line-height: 5px;">Create</div>
     </div>
     <div id="writing-Container">
+        <!-- <div class="time-Sections"> </div> -->
         <div class="writing-Container">
-            <div class="writing-Img-Container">
-                <img class="writing-Img">
-            </div>
             <div id="img-Glow"></div>
             <div class="text-Container">
                 <div class="peom-Title">I cannot find the words.</div>
                 <div class="poem-First-Little-Text">I can never truly find the right words that carry enough weight.</div>
             </div>
+            <div class="date">7s ago</div>
         </div>
     </div>
-    <div id="background-Shadown">    
-        <div id="create-Poem-Container">
-            <div id="top-Gradient"></div>
-            <div id="poem-Img-Container">
-                <!-- onclick="changeImage()" -->
-                <img id="poem-Img">
-                <svg id="camera-Icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                    <path d="M440-440ZM120-120q-33 0-56.5-23.5T40-200v-480q0-33 23.5-56.5T120-760h126l74-80h240v80H355l-73 80H120v480h640v-360h80v360q0 33-23.5 56.5T760-120H120Zm640-560v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80ZM440-260q75 0 127.5-52.5T620-440q0-75-52.5-127.5T440-620q-75 0-127.5 52.5T260-440q0 75 52.5 127.5T440-260Zm0-80q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29Z"/>
-                </svg>
-                <div class="loader-5 center"><span></span></div>
-                <input type="file" id="imageInput" accept="image/*" onchange="checkImage()">
-            </div>
-
-            <svg id="close-Poem-Create-Container" onclick="closeCreateOption()" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+    <div id="background-Shadown">
+    </div>
+    <div id="create-Poem-Container">
+        <div id="top-Gradient"></div>
+        <div id="poem-Img-Container">
+            <!-- onclick="changeImage()" -->
+            <img id="poem-Img">
+            <svg id="camera-Icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                <path d="M440-440ZM120-120q-33 0-56.5-23.5T40-200v-480q0-33 23.5-56.5T120-760h126l74-80h240v80H355l-73 80H120v480h640v-360h80v360q0 33-23.5 56.5T760-120H120Zm640-560v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80ZM440-260q75 0 127.5-52.5T620-440q0-75-52.5-127.5T440-620q-75 0-127.5 52.5T260-440q0 75 52.5 127.5T440-260Zm0-80q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29Z"/>
             </svg>
-            <input type="text" id="poem-Title-Change" placeholder="Poem Title" value="">
-            <div id="create-Poem">Start Writing...</div>
+            <div class="loader-5 center"><span></span></div>
+            <input type="file" id="imageInput" accept="image/*" onchange="checkImage()">
         </div>
+
+        <svg id="close-Poem-Create-Container" onclick="closeCreateOption()" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+            <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+        </svg>
+        <input type="text" id="poem-Title-Change" placeholder="Poem Title" value="" onkeyup="checkCompletion()">
+        <div id="create-Poem" onclick="createPoem()">Start Writing...</div>
     </div>
 </body>
 </html>
